@@ -24,11 +24,10 @@
 
 double what_time_is_it_now()
 {
-    struct timeval time;
-    if (gettimeofday(&time, NULL)) {
-        return 0;
-    }
-    return (double)time.tv_sec + (double)time.tv_usec * .000001;
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return .000000001 * ts.tv_nsec + ts.tv_sec;
+
 }
 
 int *read_map(char *filename)
