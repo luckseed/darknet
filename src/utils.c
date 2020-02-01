@@ -13,7 +13,7 @@
 #ifdef WIN32
 #include "gettimeofday.h"
 #else
-#include <sys/time.h>
+#include <time.h>
 #include <sys/stat.h>
 #endif
 
@@ -24,10 +24,17 @@
 
 double what_time_is_it_now()
 {
+#ifdef WIN32
+    struct timeval time;
+    if (gettimeofday(&time,NULL)){
+        return 0;
+    }
+    return (double)time.tv_sec + (double)time.tv_usec * .000001;
+#else
     struct timespec ts;
     clock_gettime(CLOCK_MONOTONIC, &ts);
     return .000000001 * ts.tv_nsec + ts.tv_sec;
-
+#endif
 }
 
 int *read_map(char *filename)
